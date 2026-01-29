@@ -1,5 +1,6 @@
 // models/Customer.js
 import mongoose from "mongoose";
+import { KYC_STATUS, CUSTOMER_STATUS } from "../constants/customerStatus.js";
 
 const customerSchema = new mongoose.Schema({
   fullName: String,
@@ -8,8 +9,16 @@ const customerSchema = new mongoose.Schema({
   panCard: String,
   photo: String,
   agentId: { type: mongoose.Schema.Types.ObjectId, ref: "Agent" },
-  kycStatus: { type: String, default: "pending",enum:['pending',"approved",'rejected'] },
-  status: { type: String, default: "active" ,enum:['active','blocked']},
+  kycStatus: { 
+    type: String, 
+    default: KYC_STATUS.PENDING,
+    enum: Object.values(KYC_STATUS) 
+  },
+  status: { 
+    type: String, 
+    default: CUSTOMER_STATUS.ACTIVE,
+    enum: Object.values(CUSTOMER_STATUS)
+  },
   kycStatusUpdatedAt: Date,
   kycApprovedAt: Date,
   kycRejectedAt: Date,

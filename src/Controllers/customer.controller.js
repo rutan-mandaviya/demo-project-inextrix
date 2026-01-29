@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { customerModel } from "../models/customer.model.js";
+import { KYC_STATUS, CUSTOMER_STATUS } from "../constants/customerStatus.js";
 
 
 // ================= CREATE CUSTOMER =================
@@ -113,7 +114,7 @@ export const getsingleCustomer = async (req, res) => {
 // ================= GET PENDING KYC =================
 export const getpendingkyc = async (req, res) => {
   const pendingKYC = await customerModel.find({
-    kycStatus: "pending",
+    kycStatus: KYC_STATUS.PENDING,
     agentId: req.agent._id
   });
 
@@ -138,12 +139,12 @@ export const approveKyc = async (req, res) => {
     if (!customer)
       return res.status(404).json({ message: "Customer not found" });
 
-    if (customer.kycStatus === "approved")
+    if (customer.kycStatus === KYC_STATUS.APPROVED)
       return res.status(400).json({ message: "Already approved" });
 
     const now = new Date();
 
-    customer.kycStatus = "approved";
+    customer.kycStatus = KYC_STATUS.APPROVED;
     customer.kycApprovedAt = now;
     customer.kycStatusUpdatedAt = now;
   
@@ -176,7 +177,7 @@ export const rejectKyc = async (req, res) => {
 
     const now = new Date();
 
-    customer.kycStatus = "rejected";
+    customer.kycStatus = KYC_STATUS.REJECTED;
     customer.kycRejectedAt = now;
     customer.kycRejectedReason = reason;
     customer.kycStatusUpdatedAt = now;
@@ -199,7 +200,7 @@ export const blockCustomer = async (req, res) => {
     _id: id,
     agentId: req.agent._id
   },
-    { status: "blocked" },
+    { status: CUSTOMER_STATUS.BLOCKED },
     { new: true }
 );
 
@@ -219,7 +220,7 @@ export const activeCustomer = async (req, res) => {
     _id: id,
     agentId: req.agent._id
   },
-    { status: "active" },
+    { status: CUSTOMER_STATUS.ACTIVE },
     { new: true }
   );
 
