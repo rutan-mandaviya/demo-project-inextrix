@@ -22,7 +22,7 @@ export const registerAgent = async (req, res) => {
 
     res.status(201).json({
       message: "Agent registered successfully",
-      agent
+      data:agent
     });
 
   } catch (err) {
@@ -175,7 +175,7 @@ export const getMe = async (req, res) => {
     
   
 
-    res.status(200).json({ message: "Agent details fetched", agent: fullAgent });
+    res.status(200).json({ message: "Agent details fetched", data: fullAgent });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

@@ -32,7 +32,7 @@ export const createCustomer = async (req, res) => {
       agentId
     });
 
-    res.status(201).json({ message: "Customer created", customer });
+    res.status(201).json({ message: "Customer created", data: customer });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -107,7 +107,7 @@ export const getsingleCustomer = async (req, res) => {
 
   if (!customer) return res.status(404).json({ message: "Not found" });
 
-  res.status(200).json({ message: "Customer fetched", customer });
+  res.status(200).json({ message: "Customer fetched", data:customer });
 };
 
 
@@ -121,7 +121,7 @@ export const getpendingkyc = async (req, res) => {
   if (pendingKYC.length === 0)
     return res.status(404).json({ message: "No pending KYC" });
 
-  res.status(200).json({ pendingKYC });
+  res.status(200).json({ message: "Pending KYC fetched", data: pendingKYC });
 };
 
 
@@ -151,7 +151,7 @@ export const approveKyc = async (req, res) => {
 
     await customer.save();
 
-    res.status(200).json({ message: "KYC Approved", customer });
+    res.status(200).json({ message: "KYC Approved", data: customer });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -185,7 +185,7 @@ export const rejectKyc = async (req, res) => {
 
     await customer.save();
 
-    res.status(200).json({ message: "KYC Rejected", customer });
+    res.status(200).json({ message: "KYC Rejected", data: customer });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -208,7 +208,7 @@ export const blockCustomer = async (req, res) => {
     return res.status(404).json({ message: "Customer not found" });
 
 
-  res.status(200).json({ message: "Customer blocked", customer });
+  res.status(200).json({ message: "Customer blocked", data: customer });
 };
 
 
@@ -228,5 +228,5 @@ export const activeCustomer = async (req, res) => {
     return res.status(404).json({ message: "Customer not found" });
 
 
-  res.status(200).json({ message: "Customer activated", customer });
+  res.status(200).json({ message: "Customer activated", data: customer });
 };
