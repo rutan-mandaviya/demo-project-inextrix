@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
 import { registerAgentValidator, loginAgentValidator } from "../middleware/validtor.middleware.js";
-import { verifyOtp, registerAgent, loginAgent, logoutAgent, refreshAccessToken } from "../Controllers/agent.controller.js";
+import { verifyOtp, registerAgent, loginAgent, logoutAgent, refreshAccessToken, getMe } from "../Controllers/agent.controller.js";
 import { protectAgent } from "../middleware/auth.middleware.js";
 
 
@@ -115,5 +115,18 @@ router.get("/logout", protectAgent, logoutAgent);
  *         description: Token refreshed
  */
 router.post("/refresh-token", refreshAccessToken);
+/**
+ * @swagger
+ * /auth/agent/me:
+ *   get:
+ *     summary: Get current authenticated agent
+ *     tags: [Agent Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Agent details retrieved
+ */
+router.get("/me", protectAgent, getMe);
 
 export default router;

@@ -172,6 +172,23 @@ export const refreshAccessToken = async (req, res) => {
   }
 };
 
+export const getMe = async (req, res) => {
+  try {
+    let agent = req.agent;
+    if (!agent) return res.status(401).json({ msg: "Not authenticated" });
+
+    // If middleware attached only the id (string or ObjectId), fetch full agent
+  
+    const fullAgent = await agentModel.findById(agent._id).select("-password -otp -otpExpires -refreshToken");
+    
+  
+
+    res.json({ fullAgent });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
 
 
 
