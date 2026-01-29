@@ -80,7 +80,7 @@ export const deleteCustomer = async (req, res) => {
 
     await customer.deleteOne();
 
-    res.json({ message: "Customer and files deleted successfully" });
+    res.status(200).json({ message: "Customer and files deleted successfully" });
 
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -91,7 +91,7 @@ export const deleteCustomer = async (req, res) => {
 // ================= GET ALL CUSTOMERS =================
 export const getallCustomers = async (req, res) => {
   const allCustomer = await customerModel.find({ agentId: req.agent._id });
-  res.status(200).json({ msg: "fetch all customers", allCustomer });
+  res.status(200).json({ message: "fetch all customers", allCustomer });
 };
 
 
@@ -106,7 +106,7 @@ export const getsingleCustomer = async (req, res) => {
 
   if (!customer) return res.status(404).json({ message: "Not found" });
 
-  res.json(customer);
+  res.status(200).json({ message: "Customer fetched", customer });
 };
 
 
@@ -128,12 +128,12 @@ export const getpendingkyc = async (req, res) => {
 export const approveKyc = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log(req.agent)
+
     const customer = await customerModel.findOne({
       _id: id,
       agentId: req.agent._id
     });
-    console.log(customer)
+   
 
     if (!customer)
       return res.status(404).json({ message: "Customer not found" });
@@ -150,7 +150,7 @@ export const approveKyc = async (req, res) => {
 
     await customer.save();
 
-    res.json({ message: "KYC Approved", customer });
+    res.status(200).json({ message: "KYC Approved", customer });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -184,7 +184,7 @@ export const rejectKyc = async (req, res) => {
 
     await customer.save();
 
-    res.json({ message: "KYC Rejected", customer });
+    res.status(200).json({ message: "KYC Rejected", customer });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -194,19 +194,20 @@ export const rejectKyc = async (req, res) => {
 // ================= BLOCK CUSTOMER =================
 export const blockCustomer = async (req, res) => {
   const { id } = req.params;
-console.log("first",req.agent)
-  const customer = await customerModel.findOne({
+
+  const customer = await customerModel.findOneAndUpdate({
     _id: id,
     agentId: req.agent._id
-  });
+  },
+    { status: "blocked" },
+    { new: true }
+);
 
   if (!customer)
     return res.status(404).json({ message: "Customer not found" });
 
-  customer.status = "blocked";
-  await customer.save();
 
-  res.json({ message: "Customer blocked", customer });
+  res.status(200).json({ message: "Customer blocked", customer });
 };
 
 
@@ -214,16 +215,17 @@ console.log("first",req.agent)
 export const activeCustomer = async (req, res) => {
   const { id } = req.params;
 
-  const customer = await customerModel.findOne({
+  const customer = await customerModel.findOneAndUpdate({
     _id: id,
     agentId: req.agent._id
-  });
+  },
+    { status: "active" },
+    { new: true }
+  );
 
   if (!customer)
     return res.status(404).json({ message: "Customer not found" });
 
-  customer.status = "active";
-  await customer.save();
 
-  res.json({ message: "Customer activated", customer });
+  res.status(200).json({ message: "Customer activated", customer });
 };

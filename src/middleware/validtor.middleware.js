@@ -41,7 +41,7 @@ export const loginAgentValidator = [
   (req, res, next) => {
     if (!req.body.email && !req.body.username) {
       return res.status(400).json({
-        errors: [{ msg: "Either email or username is required" }]
+        errors: [{ message: "Either email or username is required" }]
       });
     }
     next();
